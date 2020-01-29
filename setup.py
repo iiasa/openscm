@@ -37,11 +37,11 @@ CLASSIFIERS = [
     "Programming Language :: Python :: 3.7",
 ]
 REQUIREMENTS_INSTALL = ["numpy>=1.7", "scipy", "pint", "pandas", "python-dateutil"]
-REQUIREMENTS_NOTEBOOKS = ["matplotlib", "notebook", "seaborn", "pyam-iamc>=0.2.0"]
+REQUIREMENTS_NOTEBOOKS = ["matplotlib", "notebook", "seaborn", "pyam-iamc>=0.2.0", "scmdata==0.3.0"]
 REQUIREMENTS_TESTS = [
     "codecov",
     "nbval",
-    "pytest==4.5.0",  # TODO lift restriction after pytest 4.7
+    "pytest",
     "pytest-cov",
     "pyam-iamc>=0.2.0",
 ]
@@ -56,7 +56,7 @@ REQUIREMENTS_DEV = (
         "isort",
         "mypy",
         "pydocstyle",
-        "pylint @ git+https://github.com/PyCQA/pylint.git@b1ee385",  # TODO: change when new release comes out
+        "pylint>=2.4.4",
     ]
     + REQUIREMENTS_NOTEBOOKS
     + REQUIREMENTS_TESTS
@@ -122,7 +122,6 @@ CMDCLASS.update({"test": OpenSCMTest})
 setup(
     name=NAME,
     version=versioneer.get_version(),
-    python_requires=">3.7",
     description=SHORT_DESCRIPTION,
     long_description="\n".join(README_LINES),
     long_description_content_type="text/x-rst",

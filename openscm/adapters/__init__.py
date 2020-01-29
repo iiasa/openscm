@@ -7,7 +7,6 @@ from typing import Dict, Optional
 
 import numpy as np
 
-from ..core.parameterset import ParameterSet
 from ..errors import AdapterNeedsModuleError
 
 _loaded_adapters: Dict[str, type] = {}
@@ -20,37 +19,18 @@ class Adapter(metaclass=ABCMeta):
 
     :ref:`writing-adapters` provides a how-to on implementing an adapter.
 
-    A model adapter is responsible for requesting the expected input parameters (in the
-    expected time format and units) for the particular SCM from a
-    :class:`openscm.core.ParameterSet`. It also runs its wrapped SCM and writes the
-    output data back to a :class:`openscm.core.ParameterSet`.
+    A model adapter is responsible for running the model based on the inputs from
+    OpenSCM and writing the data back into the OpenSCM format [TODO the OpenSCM
+    format].
     """
-
-    _current_time: np.datetime64
-    """Current time when using :func:`step`"""
 
     _initialized: bool
     """``True`` if model has been initialized via :func:`_initialize_model`"""
 
-    _output: ParameterSet
-    """Output parameter set"""
-
-    _parameters: ParameterSet
-    """Input parameter set"""
-
-    def __init__(self, input_parameters: ParameterSet, output_parameters: ParameterSet):
+    def __init__(self):
         """
         Initialize.
-
-        Parameters
-        ----------
-        input_parameters
-            Input parameter set to use
-        output_parameters
-            Output parameter set to use
         """
-        self._parameters = input_parameters
-        self._output = output_parameters
         self._initialized = False
         self._initialized_inputs = False
         self._current_time = 0
@@ -66,7 +46,7 @@ class Adapter(metaclass=ABCMeta):
         Initialize the model input.
 
         Called before the adapter is used in any way and at most once before a call to
-        :func:`run` or :func:`step`.
+        :func:`run`.
         """
         if not self._initialized:
             self._initialize_model()
@@ -79,7 +59,7 @@ class Adapter(metaclass=ABCMeta):
         Initialize parameters for the run.
 
         Called before the adapter is used in any way and at most once before a call to
-        :func:`run` or :func:`step`.
+        :func:`run`.
         """
         if not self._initialized:
             self._initialize_model()
@@ -91,10 +71,8 @@ class Adapter(metaclass=ABCMeta):
         """
         Reset the model to prepare for a new run.
 
-        Called once after each call of :func:`run` and to reset the model after several calls
-        to :func:`step`.
+        Called once after each call of :func:`run`.
         """
-        self._current_time = self._parameters.generic("Start Time").value
         self._reset()
 
     def run(self) -> None:
@@ -103,25 +81,13 @@ class Adapter(metaclass=ABCMeta):
         """
         self._run()
 
-    def step(self) -> np.datetime64:
-        """
-        Do a single time step.
-
-        Returns
-        -------
-        np.datetime64
-            Current time
-        """
-        self._step()
-        return self._current_time
-
     @abstractmethod
     def _initialize_model(self) -> None:
         """
         To be implemented by specific adapters.
 
         Initialize the model. Called only once but as late as possible before a call to
-        :func:`_run` or :func:`_step`.
+        :func:`_run`.
         """
 
     @abstractmethod
@@ -130,7 +96,7 @@ class Adapter(metaclass=ABCMeta):
         To be implemented by specific adapters.
 
         Initialize the model input. Called before the adapter is used in any way and at
-        most once before a call to :func:`_run` or :func:`_step`.
+        most once before a call to :func:`_run`.
         """
 
     @abstractmethod
@@ -139,7 +105,7 @@ class Adapter(metaclass=ABCMeta):
         To be implemented by specific adapters.
 
         Initialize parameters for the run. Called before the adapter is used in any way
-        and at most once before a call to :func:`_run` or :func:`_step`.
+        and at most once before a call to :func:`_run`.
         """
 
     @abstractmethod
@@ -148,7 +114,7 @@ class Adapter(metaclass=ABCMeta):
         To be implemented by specific adapters.
 
         Reset the model to prepare for a new run. Called once after each call of
-        :func:`_run` and to reset the model after several calls to :func:`_step`.
+        :func:`_run`.
         """
 
     @abstractmethod
@@ -165,14 +131,6 @@ class Adapter(metaclass=ABCMeta):
         To be implemented by specific adapters.
 
         Shut the model down.
-        """
-
-    @abstractmethod
-    def _step(self) -> None:
-        """
-        To be implemented by specific adapters.
-
-        Do a single time step.
         """
 
 
@@ -194,6 +152,7 @@ def load_adapter(name: str) -> type:
     ------
     AdapterNeedsModuleError
         Adapter needs a module that is not installed
+
     KeyError
         Adapter/model not found
     """
