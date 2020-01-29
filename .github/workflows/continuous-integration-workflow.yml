@@ -1,23 +1,25 @@
 name: OpenSCM-CI
-on: [push]
-runs-on: ubuntu-latest
+on: push
 
 jobs:
   build:
+    runs-on: ubuntu-latest
     steps:
-    - name: Documentation
-      uses: swillner/actions/python-run@python-3.7
-      # treat warnings as errors (-W)
-      # ...but not when being nitpicky (-n)
-      run: |
-        pip install -e .[docs]
-        sphinx-build -M html docs docs/build -qW
-        sphinx-build -M html docs docs/build -Eqn -b coverage
-        if [[ -s docs/build/html/python.txt ]]
-        then
-            echo
-            echo "Error: Documentation missing:"
-            echo
-            cat docs/build/html/python.txt
-            exit 1
-        fi
+      - uses: actions/checkout@v2
+      - name: Installation
+        run: |
+          pip install -e .[docs]
+      - name: Build documentation
+        # treat warnings as errors (-W)...
+        # ...but not when being nitpicky (-n)
+        run: |
+            sphinx-build -M html docs docs/build -qW
+            sphinx-build -M html docs docs/build -Eqn -b coverage
+            if [[ -s docs/build/html/python.txt ]]
+            then
+                echo
+                echo \"Error: Documentation missing:\"
+                echo
+                cat docs/build/html/python.txt
+                exit 1
+            fi
