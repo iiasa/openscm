@@ -74,7 +74,8 @@ test: venv  ## run all the code tests
 	./venv/bin/pytest -sx tests
 
 test-notebooks: venv  ## run all notebook tests
-	./venv/bin/pytest notebooks -r a --nbval --sanitize tests/notebook-tests.cfg
+	echo "No notebooks at present"
+# 	./venv/bin/pytest notebooks -r a --nbval --sanitize tests/notebook-tests.cfg
 
 test-all: test test-notebooks  ## run the testsuite and the notebook tests
 

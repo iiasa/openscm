@@ -161,7 +161,9 @@ def load_adapter(name: str) -> type:
 
     try:
         if name == "DICE":
-            from .dice import DICE  # pylint: disable=cyclic-import,import-outside-toplevel
+            from .dice import (  # pylint: disable=cyclic-import,import-outside-toplevel
+                DICE,
+            )
 
             adapter = DICE
 

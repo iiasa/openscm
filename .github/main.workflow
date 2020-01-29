@@ -54,15 +54,6 @@ action "Tests" {
   ]
 }
 
-action "Notebooks" {
-  uses = "swillner/actions/python-run@python-3.7"
-  args = [
-    "pip install -e .[tests,notebooks]",
-    "pytest notebooks -r a --nbval --sanitize tests/notebook-tests.cfg --no-cov"
-  ]
-  needs = ["Coverage", "Documentation", "Formatting", "Linters", "Tests"]
-}
-
 action "Coverage" {
   uses = "swillner/actions/python-run@python-3.7"
   args = [
