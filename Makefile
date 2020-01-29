@@ -50,12 +50,13 @@ define clean_notebooks_code
 endef
 
 clean-notebooks: venv  ## clean the notebooks of spurious changes to prepare for a PR
-	@tmp=$$(mktemp); \
-	for notebook in notebooks/*.ipynb; do \
-		jq --indent 1 '${clean_notebooks_code}' "$${notebook}" > "$${tmp}"; \
-		cp "$${tmp}" "$${notebook}"; \
-	done; \
-	rm "$${tmp}"
+	echo "No notebooks at present"
+# 	@tmp=$$(mktemp); \
+# 	for notebook in notebooks/*.ipynb; do \
+# 		jq --indent 1 '${clean_notebooks_code}' "$${notebook}" > "$${tmp}"; \
+# 		cp "$${tmp}" "$${notebook}"; \
+# 	done; \
+# 	rm "$${tmp}"
 
 coverage: venv  ## run all the tests and show code coverage
 	./venv/bin/pytest tests -r a --cov=openscm --cov-report='' --durations=10

@@ -37,7 +37,13 @@ CLASSIFIERS = [
     "Programming Language :: Python :: 3.7",
 ]
 REQUIREMENTS_INSTALL = ["numpy>=1.7", "scipy", "pint", "pandas", "python-dateutil"]
-REQUIREMENTS_NOTEBOOKS = ["matplotlib", "notebook", "seaborn", "pyam-iamc>=0.2.0", "scmdata==0.3.0"]
+REQUIREMENTS_NOTEBOOKS = [
+    "matplotlib",
+    "notebook",
+    "seaborn",
+    "pyam-iamc>=0.2.0",
+    "scmdata==0.3.0",
+]
 REQUIREMENTS_TESTS = [
     "codecov",
     "nbval",

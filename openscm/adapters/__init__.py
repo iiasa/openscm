@@ -5,8 +5,6 @@ Module including all model adapters shipped with OpenSCM.
 from abc import ABCMeta, abstractmethod
 from typing import Dict, Optional
 
-import numpy as np
-
 from ..errors import AdapterNeedsModuleError
 
 _loaded_adapters: Dict[str, type] = {}
@@ -163,7 +161,7 @@ def load_adapter(name: str) -> type:
 
     try:
         if name == "DICE":
-            from .dice import DICE  # pylint: disable=cyclic-import
+            from .dice import DICE  # pylint: disable=cyclic-import,import-outside-toplevel
 
             adapter = DICE
 

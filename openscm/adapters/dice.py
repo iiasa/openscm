@@ -13,6 +13,7 @@ variable naming. Original comments are marked by "Original:".
 
 from . import Adapter
 
+
 class DICE(Adapter):
     """
     Adapter for the climate component from the Dynamic Integrated Climate-Economy (DICE)
@@ -20,5 +21,6 @@ class DICE(Adapter):
 
     TODO: re-write
     """
-    def __init__(self):
+
+    def __init__(self):  # pylint:disable=super-init-not-called
         raise NotImplementedError
