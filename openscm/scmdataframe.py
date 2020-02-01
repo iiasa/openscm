@@ -23,7 +23,7 @@ from openscm.core.parameters import (
 )
 from openscm.core.parameterset import ParameterSet
 from openscm.core.time import ExtrapolationType, InterpolationType, TimeseriesConverter
-from openscm.errors import ParameterEmptyError
+from openscm.errors import ParameterEmptyError, ParameterWrittenError
 
 
 class OpenScmDataFrame(ScmDataFrame):  # type: ignore
@@ -109,13 +109,19 @@ class OpenScmDataFrame(ScmDataFrame):  # type: ignore
                 delta_t = time_points[-1] - time_points[-2]
                 time_points = np.concatenate((time_points, [time_points[-1] + delta_t]))
 
-            parameterset.timeseries(
-                variable,
-                unit,
-                time_points=time_points,
-                region=region,
-                timeseries_type=timeseries_type,
-            ).values = vals.values
+            print(f'Setting [variable={variable}, unit={unit}, region={region}]...')
+            try:
+                parameterset.timeseries(
+                    variable,
+                    unit,
+                    time_points=time_points,
+                    region=region,
+                    timeseries_type=timeseries_type,
+                ).values = vals.values
+            except ParameterWrittenError as e:
+                # hack
+                print(f'Cannot set [variable={variable}, unit={unit}, region={region}]: {str(e)}')
+                continue
 
         unit_regexp = re.compile(r".*\(.*\)")
         for k, v in meta_values.iteritems():
