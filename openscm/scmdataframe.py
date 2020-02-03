@@ -110,18 +110,25 @@ class OpenScmDataFrame(ScmDataFrame):  # type: ignore
                 time_points = np.concatenate((time_points, [time_points[-1] + delta_t]))
 
             print(f'Setting [variable={variable}, unit={unit}, region={region}]...')
-            try:
-                parameterset.timeseries(
-                    variable,
-                    unit,
-                    time_points=time_points,
-                    region=region,
-                    timeseries_type=timeseries_type,
-                ).values = vals.values
-            except ParameterWrittenError as e:
-                # hack
-                print(f'Cannot set [variable={variable}, unit={unit}, region={region}]: {str(e)}')
-                continue
+            parameterset.timeseries(
+                variable,
+                unit,
+                time_points=time_points,
+                region=region,
+                timeseries_type=timeseries_type,
+            ).values = vals.values
+            # try:
+            #     parameterset.timeseries(
+            #         variable,
+            #         unit,
+            #         time_points=time_points,
+            #         region=region,
+            #         timeseries_type=timeseries_type,
+            #     ).values = vals.values
+            # except ParameterWrittenError as e:
+            #     # hack
+            #     print(f'Cannot set [variable={variable}, unit={unit}, region={region}]: {str(e)}')
+            #     continue
 
         unit_regexp = re.compile(r".*\(.*\)")
         for k, v in meta_values.iteritems():

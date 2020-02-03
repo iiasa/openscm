@@ -1,0 +1,11 @@
+venv/
+docs/
+.pytest_cache/
+.idea/
+.github/
+venv/
+*.egg-info
+*.egg/
+*.pyc
+*.swp
+__pycache__
