@@ -38,10 +38,10 @@ CLASSIFIERS = [
 ]
 REQUIREMENTS_INSTALL = [
     "numpy>=1.7",
-    "scmdata",
+    "scmdata>=0.4.0",
     "scipy",
     "pint",
-    "pandas<1.0",
+    "pandas>=1.0",
     "python-dateutil",
     "tqdm",
 ]

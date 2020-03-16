@@ -5,7 +5,7 @@ import warnings
 from typing import TYPE_CHECKING, Dict, Sequence
 
 import numpy as np
-from scmdata.units import _unit_registry
+from scmdata.units import unit_registry
 
 from ..core.parameters import HierarchicalName, ParameterInfo
 from ..errors import ParameterEmptyError
@@ -29,7 +29,7 @@ class PH99(AdapterConstantTimestep):
     foundations, Climatic Change, 41, 303–331, 1999.
     """
 
-    _hc_per_m2_approx = 1.34 * 10 ** 9 * _unit_registry("J / kelvin / m^2")
+    _hc_per_m2_approx = 1.34 * 10 ** 9 * unit_registry("J / kelvin / m^2")
     """Approximate heat capacity per unit area (used to estimate rf2xco2)"""
 
     _base_time = np.datetime64("1750-01-01")
@@ -125,7 +125,7 @@ class PH99(AdapterConstantTimestep):
                 warnings.warn(
                     "Rounding {} timestep to nearest integer".format(self.name)
                 )
-                value = int(mag) * _unit_registry(units)
+                value = int(mag) * unit_registry(units)
                 self.model.timestep = value
 
         self._add_parameter_view(full_name, value.magnitude, unit=str(value.units))
@@ -194,12 +194,12 @@ class PH99(AdapterConstantTimestep):
             if name[0] != self.name:
                 # emergency valve for now, must be smarter way to handle this
                 raise ValueError("How did non-PH99 parameter end up here?")
-            setattr(self.model, name[1], value * _unit_registry(para.unit))
+            setattr(self.model, name[1], value * unit_registry(para.unit))
 
     def _set_model_para_from_openscm_para(self, openscm_name, value, unit):
         model_name = self._openscm_standard_parameter_mappings[openscm_name]
         if unit is not None:
-            pv = value * _unit_registry(unit)
+            pv = value * unit_registry(unit)
         else:
             pv = value
 
@@ -220,7 +220,7 @@ class PH99(AdapterConstantTimestep):
         )
 
         mu = self._parameter_views[(self.name, "mu")]
-        mu = mu.value * _unit_registry(mu.unit)
+        mu = mu.value * unit_registry(mu.unit)
 
         alpha = mu * np.log(2) / v
         self.model.alpha = alpha
@@ -261,7 +261,7 @@ class PH99(AdapterConstantTimestep):
         v = (v - self._base_time).item().total_seconds()
         if int(v) != v:
             warnings.warn("Rounding {} time_start to nearest integer".format(self.name))
-        self.model.time_start = int(v) * _unit_registry("s")
+        self.model.time_start = int(v) * unit_registry("s")
 
     @property
     def timestep(self) -> np.timedelta64:

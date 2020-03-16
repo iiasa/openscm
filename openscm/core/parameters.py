@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Dict, Optional, Sequence, Tuple, Union
 
 import numpy as np
 from pint import UndefinedUnitError
-from scmdata.units import _unit_registry
+from scmdata.units import unit_registry
 
 from ..errors import (
     ParameterAggregationError,
@@ -456,7 +456,7 @@ def guess_parameter_type(variable_name: str, unit: Optional[str]) -> ParameterTy
     if unit:
         # try and determine if the unit contains a time dimension
         try:
-            pint_unit = _unit_registry(unit).units
+            pint_unit = unit_registry(unit).units
             if "[time]" in str(pint_unit.dimensionality):
                 return ParameterType.AVERAGE_TIMESERIES
 
