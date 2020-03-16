@@ -20,7 +20,7 @@ import copy
 from typing import Any
 
 import numpy as np
-from scmdata.units import _unit_registry
+from scmdata.units import unit_registry
 
 from ..errors import OutOfBoundsError, OverwriteError
 
@@ -30,10 +30,10 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
     Implementation of model first presented in Petschel-Held Climatic Change 1999
     """
 
-    _yr = 1 * _unit_registry("yr")
+    _yr = 1 * unit_registry("yr")
     """:obj:`pint.Quantity`: one year"""
 
-    def __init__(self, time_start=0 * _unit_registry("yr")):
+    def __init__(self, time_start=0 * unit_registry("yr")):
         """
         Initialise an instance of PH99Model
 
@@ -58,7 +58,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
         self._check_is_pint_quantity(value)
         self._timestep = value.to(self._timestep_units).magnitude
 
-    _timestep_units = _unit_registry("yr")
+    _timestep_units = unit_registry("yr")
     _timestep = _yr.to(_timestep_units).magnitude
 
     @property
@@ -102,7 +102,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
         self._emissions = value.to(self._emissions_units).magnitude
         self._emissions_nan = np.isnan(np.sum(self._emissions))
 
-    _emissions_units = _unit_registry("GtC / yr")
+    _emissions_units = unit_registry("GtC / yr")
     _emissions = np.array([np.nan])
     _emissions_nan = True
 
@@ -120,7 +120,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
             self._cumulative_emissions_units
         ).magnitude
 
-    _cumulative_emissions_units = _unit_registry("GtC")
+    _cumulative_emissions_units = unit_registry("GtC")
     _cumulative_emissions = np.array([np.nan])
 
     @property
@@ -135,7 +135,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
         self._check_is_pint_quantity(value)
         self._concentrations = value.to(self._concentrations_units).magnitude
 
-    _concentrations_units = _unit_registry("ppm")
+    _concentrations_units = unit_registry("ppm")
     _concentrations = np.array([np.nan])
 
     @property
@@ -156,7 +156,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
     @property
     def temperatures(self):
         """`pint.Quantity` array: Global-mean temperatures"""
-        return _unit_registry.Quantity(
+        return unit_registry.Quantity(
             self._temperatures, str(self._temperatures_units)
         )
 
@@ -166,7 +166,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
         self._temperatures = value.to(self._temperatures_units).magnitude
 
     # have to initialise like this to avoid ambiguity...
-    _temperatures_tmp = _unit_registry.Quantity(np.array([np.nan]), "delta_degC")
+    _temperatures_tmp = unit_registry.Quantity(np.array([np.nan]), "delta_degC")
     _temperatures_units = _temperatures_tmp.units
     _temperatures = _temperatures_tmp.magnitude
 
@@ -197,7 +197,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
         self._check_is_pint_quantity(value)
         self._b = value.to(self._b_units).magnitude
 
-    _b_units = _unit_registry("ppm / (GtC * yr)")
+    _b_units = unit_registry("ppm / (GtC * yr)")
     _b = 1.51 * 10 ** -3
 
     @property
@@ -214,7 +214,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
         self._check_is_pint_quantity(value)
         self._beta = value.to(self._beta_units).magnitude
 
-    _beta_units = _unit_registry("ppm/GtC")
+    _beta_units = unit_registry("ppm/GtC")
     _beta = 0.47
 
     @property
@@ -231,7 +231,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
         self._check_is_pint_quantity(value)
         self._sigma = value.to(self._sigma_units).magnitude
 
-    _sigma_units = _unit_registry("1/yr")
+    _sigma_units = unit_registry("1/yr")
     _sigma = 2.15 * 10 ** -2
 
     @property
@@ -248,7 +248,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
         self._check_is_pint_quantity(value)
         self._c1 = value.to(self._c1_units).magnitude
 
-    _c1_units = _unit_registry("ppm")
+    _c1_units = unit_registry("ppm")
     _c1 = 290
 
     @property
@@ -268,7 +268,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
         self._mu = value.to(self._mu_units).magnitude
 
     # have to initialise like this to avoid ambiguity...
-    _mu_tmp = _unit_registry.Quantity(8.7 * 10 ** -2, "delta_degC/yr")
+    _mu_tmp = unit_registry.Quantity(8.7 * 10 ** -2, "delta_degC/yr")
     _mu_units = _mu_tmp.units
     _mu = _mu_tmp.magnitude
 
@@ -286,7 +286,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
         self._check_is_pint_quantity(value)
         self._alpha = value.to(self._alpha_units).magnitude
 
-    _alpha_units = _unit_registry("1/yr")
+    _alpha_units = unit_registry("1/yr")
     _alpha = 1.7 * 10 ** -2
 
     @property
@@ -298,7 +298,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
         """
         # need to better understand
         # pint.errors.OffsetUnitCalculusError: Ambiguous operation with offset unit (degC).
-        return _unit_registry.Quantity(self._t1, str(self._t1_units))
+        return unit_registry.Quantity(self._t1, str(self._t1_units))
 
     @t1.setter
     def t1(self, value):
@@ -306,7 +306,7 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
         self._t1 = value.to(self._t1_units).magnitude
 
     # have to initialise like this to avoid ambiguity...
-    _t1_tmp = _unit_registry.Quantity(14.6, "delta_degC")
+    _t1_tmp = unit_registry.Quantity(14.6, "delta_degC")
     _t1_units = _t1_tmp.units
     _t1 = _t1_tmp.magnitude
 
@@ -388,17 +388,17 @@ class PH99Model:  # pylint: disable=too-many-instance-attributes
 
         cumulative_emissions_init = copy.deepcopy(initialiser)
         cumulative_emissions_init[0] = 0
-        self.cumulative_emissions = _unit_registry.Quantity(
+        self.cumulative_emissions = unit_registry.Quantity(
             cumulative_emissions_init, "GtC"
         )
 
         concentrations_init = copy.deepcopy(initialiser)
         concentrations_init[0] = self._concentrations_t_0
-        self.concentrations = _unit_registry.Quantity(concentrations_init, "ppm")
+        self.concentrations = unit_registry.Quantity(concentrations_init, "ppm")
 
         temperatures_init = copy.deepcopy(initialiser)
         temperatures_init[0] = self._temperatures_t_0
-        self.temperatures = _unit_registry.Quantity(temperatures_init, "delta_degC")
+        self.temperatures = unit_registry.Quantity(temperatures_init, "delta_degC")
 
     def run(self) -> None:
         """
